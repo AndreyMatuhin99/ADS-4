@@ -46,14 +46,23 @@ int binarySearch(int *arr, int left, int right, int target) {
 
 int countPairs3(int *arr, int len, int value) {
     int count = 0;
+    bool *visited = new bool[len];
     for (int i = 0; i < len; ++i) {
+        visited[i] = false;
+    }
+    for (int i = 0; i < len; ++i) {
+        if (visited[i]) continue;
         int index = binarySearch(arr, i + 1, len - 1, value - arr[i]);
         if (index != -1) {
             ++count;
+            visited[i] = true;
+            visited[index] = true;
         }
     }
+    delete[] visited;
     return count;
 }
+
 
 int main() {
     int arr[] = {20, 30, 30, 40, 40};
