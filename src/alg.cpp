@@ -1,21 +1,20 @@
 // Copyright 2021 NNTU-CS
-#include <iostream>
-
-int countPairs1(int *arr, int len, int value) {
+int countPairs1(int* arr, int size, int value) {
     int count = 0;
-    for (int i = 0; i < len - 1; ++i) {
-        for (int j = i + 1; j < len; ++j) {
-            if (arr[i] + arr[j] == value) {
-                ++count;
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = i + 1; j < size; j++) {
+            if ((arr[i] + arr[j]) == value) {
+                count += 1;
             }
         }
     }
     return count;
 }
 
-int countPairs2(int *arr, int len, int value) {
+int countPairs2(int* arr, int len, int value) {
     int count = 0;
-    int left = 0, right = len - 1;
+    int left = 0;
+    int right = len - 1;
     while (left < right) {
         int sum = arr[left] + arr[right];
         if (sum == value) {
@@ -31,47 +30,37 @@ int countPairs2(int *arr, int len, int value) {
     return count;
 }
 
-int binarySearch(int *arr, int left, int right, int target) {
+int binarySearch(int* arr, int left, int right, int target) {
+    int count = 0;
     while (left <= right) {
         int mid = left + (right - left) / 2;
-        if (arr[mid] == target)
-            return mid;
-        else if (arr[mid] < target)
-            left = mid + 1;
-        else
-            right = mid - 1;
-    }
-    return -1;
-}
-
-int countPairs3(int *arr, int len, int value) {
-    int count = 0;
-    bool *visited = new bool[len];
-    for (int i = 0; i < len; ++i) {
-        visited[i] = false;
-    }
-    for (int i = 0; i < len; ++i) {
-        if (visited[i]) continue;
-        int index = binarySearch(arr, i + 1, len - 1, value - arr[i]);
-        if (index != -1) {
+        if (arr[mid] == target) {
             ++count;
-            visited[i] = true;
-            visited[index] = true;
+            int l = mid - 1;
+            int r = mid + 1;
+            while (l >= left && arr[l] == target) {
+                ++count;
+                --l;
+            }
+            while (r <= right && arr[r] == target) {
+                ++count;
+                ++r;
+            }
+            return count;
+        } else if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
         }
     }
-    delete[] visited;
     return count;
 }
 
-
-int main() {
-    int arr[] = {20, 30, 30, 40, 40};
-    int len = sizeof(arr) / sizeof(arr[0]);
-    int value = 50;
-
-    std::cout << "countPairs1: " << countPairs1(arr, len, value) << std::endl;
-    std::cout << "countPairs2: " << countPairs2(arr, len, value) << std::endl;
-    std::cout << "countPairs3: " << countPairs3(arr, len, value) << std::endl;
-
-    return 0;
+int countPairs3(int* arr, int len, int value) {
+    int count = 0;
+    for (int i = 0; i < len; ++i) {
+        int index = binarySearch(arr, i + 1, len - 1, value - arr[i]);
+        count += index;
+    }
+    return count;
 }
