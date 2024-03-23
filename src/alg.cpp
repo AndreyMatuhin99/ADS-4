@@ -1,6 +1,5 @@
 // Copyright 2021 NNTU-CS
 #include <iostream>
-#include <iostream>
 
 int countPairs1(int *arr, int size, int value) {
     int count = 0;
